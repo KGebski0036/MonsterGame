@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerLocomotion : MonoBehaviour
 {
-    [SerializeField] GameObject camera;
+    [SerializeField] GameObject playerCamera;
     [SerializeField] float      movmentSpeed;
     [SerializeField] float      rottationSpeed;
 
@@ -29,8 +29,8 @@ public class PlayerLocomotion : MonoBehaviour
 
     private void HandleMovement()
     {
-        moveDirection = camera.transform.forward * inputMenager.movmentInput.y;
-        moveDirection += camera.transform.right * inputMenager.movmentInput.x;
+        moveDirection = playerCamera.transform.forward * inputMenager.movmentInput.y;
+        moveDirection += playerCamera.transform.right * inputMenager.movmentInput.x;
         moveDirection.Normalize();
         moveDirection.y = 0;
         moveDirection *= movmentSpeed;
@@ -40,8 +40,8 @@ public class PlayerLocomotion : MonoBehaviour
 
     private void HandleRotation()
     {
-        lookingDirection = camera.transform.forward * inputMenager.movmentInput.y;
-        lookingDirection += camera.transform.right * inputMenager.movmentInput.x;
+        lookingDirection = playerCamera.transform.forward * inputMenager.movmentInput.y;
+        lookingDirection += playerCamera.transform.right * inputMenager.movmentInput.x;
         lookingDirection.Normalize();
         lookingDirection.y = 0;
         lookingDirection *= rottationSpeed;

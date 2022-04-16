@@ -378,6 +378,7 @@ GameObject:
   - component: {fileID: 797263241502023681}
   - component: {fileID: 2810986918919691092}
   - component: {fileID: 3282109081801716649}
+  - component: {fileID: 4825870445616572835}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -427,7 +428,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &-8003420313466465797
 CapsuleCollider:
@@ -439,10 +440,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 1
+  m_Radius: 0.18392023
+  m_Height: 1.7916048
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: -0.004171908, y: 0.890494, z: -0.009415835}
 --- !u!114 &797263241502023681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -469,8 +470,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 0}
-  movmentSpeed: 0
-  rottationSpeed: 0
+  movmentSpeed: 7
+  rottationSpeed: 10
 --- !u!114 &3282109081801716649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -483,6 +484,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77a0ef013a1e5f24cb94e55c1f69aa6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &4825870445616572835
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1088801062879722459}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 253d1db322a7aab44af22c8f8136f746, type: 3}
+  m_Controller: {fileID: 9100000, guid: 345058b069d3988499b8a6f271bc3a56, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1183210599954383982
 GameObject:
   m_ObjectHideFlags: 0
