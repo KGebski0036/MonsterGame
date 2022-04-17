@@ -4,16 +4,21 @@ using UnityEngine;
 
 public class LocomotionMenager : MonoBehaviour
 {
+    [SerializeField] public float playerSprintSpeed;
+
     [SerializeField] GameObject playerCamera;
     [SerializeField] float      playerWalkSpeed;
     [SerializeField] float      turnSmoothTime;
+    [SerializeField] float      walkingSmoothness;
 
+    public float currentPlayerSpeed = 0;
 
     private CharacterController characterController;
     private InputMenager        inputMenager;
     private Vector3             moveDirection = Vector3.zero;
     private float               turnSmoothVelocity;
     private float               targetAngle;
+    private float               targetSpeed;
 
     private void Awake()
     {
@@ -41,14 +46,26 @@ public class LocomotionMenager : MonoBehaviour
 
     private void HanleMovment()
     {
+        targetSpeed = 0;
+
         moveDirection.x = inputMenager.movmentInput.x;
         moveDirection.z = inputMenager.movmentInput.y;
         moveDirection.Normalize();
 
         if (moveDirection.magnitude >= 0.1f)
         {
-            Vector3 velocity = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-            characterController.Move(velocity * playerWalkSpeed * Time.deltaTime);
+            targetSpeed = playerWalkSpeed;
+
+            if (inputMenager.isSprinting)
+            {
+                targetSpeed = playerSprintSpeed;
+            }
         }
+
+        Vector3 velocity = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+
+        currentPlayerSpeed = Mathf.Lerp(currentPlayerSpeed, targetSpeed, walkingSmoothness);
+
+        characterController.Move(velocity * currentPlayerSpeed * Time.deltaTime);
     }
 }

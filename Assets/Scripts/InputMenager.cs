@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class InputMenager : MonoBehaviour
 {
-    public Vector2 movmentInput;
+    public Vector2  movmentInput;
+    public bool     isSprinting;
 
     public void HandleAllInputs()
     {
@@ -14,5 +15,7 @@ public class InputMenager : MonoBehaviour
     {
         movmentInput.y = Input.GetAxisRaw("Vertical");
         movmentInput.x = Input.GetAxisRaw("Horizontal");
+
+        isSprinting = Input.GetKey(KeyCode.LeftShift);
     }
 }

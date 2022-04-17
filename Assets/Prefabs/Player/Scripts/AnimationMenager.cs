@@ -7,17 +7,19 @@ public class AnimationMenager : MonoBehaviour
 {
     [SerializeField] float smoothOfAnimationTransition;
 
-    private Animator        animator;
-    private InputMenager    input;
-    private int             horizontalHash;
-    private int             verticalHash;
+    private Animator            animator;
+    private LocomotionMenager   locomotion;
+    private int                 horizontalHash;
+    private int                 verticalHash;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        input = GetComponent<InputMenager>();
+        locomotion = GetComponent<LocomotionMenager>();
+
         horizontalHash = Animator.StringToHash("HorizontalSpeed");
         verticalHash = Animator.StringToHash("VerticalSpeed");
+
     }
     public void UpdateAnimatorValue()
     {
@@ -26,7 +28,8 @@ public class AnimationMenager : MonoBehaviour
 
     private void UpdateMovmentAnimatorValue()
     {
-        animator.SetFloat(horizontalHash, Mathf.Abs(input.movmentInput.y), smoothOfAnimationTransition, Time.deltaTime);
-        animator.SetFloat(verticalHash, Mathf.Abs(input.movmentInput.x), smoothOfAnimationTransition, Time.deltaTime);
+        float speed = (locomotion.currentPlayerSpeed / locomotion.playerSprintSpeed) * 1.5f;
+        animator.SetFloat(horizontalHash, speed, smoothOfAnimationTransition, Time.deltaTime);
+        animator.SetFloat(verticalHash, speed, smoothOfAnimationTransition, Time.deltaTime);
     }
 }
