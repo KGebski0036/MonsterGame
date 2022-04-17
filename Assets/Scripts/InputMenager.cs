@@ -12,7 +12,7 @@ public class InputMenager : MonoBehaviour
     }
     private void HandleMovmentInput()
     {
-        movmentInput.y = Input.GetAxis("Vertical");
-        movmentInput.x = Input.GetAxis("Horizontal");
+        movmentInput.y = Input.GetAxisRaw("Vertical");
+        movmentInput.x = Input.GetAxisRaw("Horizontal");
     }
 }
