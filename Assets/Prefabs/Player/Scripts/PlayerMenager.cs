@@ -18,6 +18,9 @@ public class PlayerMenager : MonoBehaviour
     {
         inputMenager.HandleAllInputs();
         animationMenager.UpdateAnimatorValue();
+    }
+    private void FixedUpdate()
+    {
         locomotionMenager.HandleAllLocomotion();
     }
 }

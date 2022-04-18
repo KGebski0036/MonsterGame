@@ -10,26 +10,37 @@ public class LocomotionMenager : MonoBehaviour
     [SerializeField] float      playerWalkSpeed;
     [SerializeField] float      turnSmoothTime;
     [SerializeField] float      walkingSmoothness;
+    [SerializeField] float      fallingSpeed;
+    [SerializeField] float      groundRaycastOffset;
+    [SerializeField] float      groundraycastLength;
+    [SerializeField] LayerMask  groundLayer;
 
-    public float currentPlayerSpeed = 0;
+    public float    currentPlayerSpeed = 0;
+    public bool     isOnGround;
+    public bool     justLand;
 
     private CharacterController characterController;
     private InputMenager        inputMenager;
+    private Rigidbody           playerRigidbody;
     private Vector3             moveDirection = Vector3.zero;
     private float               turnSmoothVelocity;
     private float               targetAngle;
     private float               targetSpeed;
+    private float               timeInAir = 0;
 
     private void Awake()
     {
         inputMenager = GetComponent<InputMenager>();
         characterController = GetComponent<CharacterController>();
+        playerRigidbody = GetComponent<Rigidbody>();
     }
 
     public void HandleAllLocomotion()
     {
         HandleRotation();
-        HanleMovment();
+        HandleMovment();
+
+        HandleFallingAndLanding();
     }
 
     private void HandleRotation()
@@ -44,7 +55,7 @@ public class LocomotionMenager : MonoBehaviour
         }
     }
 
-    private void HanleMovment()
+    private void HandleMovment()
     {
         targetSpeed = 0;
 
@@ -66,6 +77,32 @@ public class LocomotionMenager : MonoBehaviour
 
         currentPlayerSpeed = Mathf.Lerp(currentPlayerSpeed, targetSpeed, walkingSmoothness);
 
-        characterController.Move(velocity * currentPlayerSpeed * Time.deltaTime);
+        playerRigidbody.velocity = velocity * currentPlayerSpeed;
+
+    }
+
+    private void HandleFallingAndLanding()
+    {
+        RaycastHit hit;
+        Vector3 rayCastOrigin = transform.position;
+        rayCastOrigin.y += groundRaycastOffset;
+
+        isOnGround = Physics.SphereCast(rayCastOrigin, groundraycastLength, Vector3.down, out hit, groundLayer);
+
+        if (!isOnGround)
+        {
+            timeInAir += Time.deltaTime;
+            playerRigidbody.AddForce(Vector3.down * fallingSpeed * timeInAir * timeInAir);
+
+        }
+        else if (timeInAir > 0)
+        {
+            timeInAir = 0;
+            justLand = true;
+        }
+        else
+        {
+            justLand = false;
+        }
     }
 }
