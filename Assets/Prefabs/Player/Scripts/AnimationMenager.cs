@@ -51,7 +51,6 @@ public class AnimationMenager : MonoBehaviour
         if (!locomotion.isOnGround && !animator.GetBool(isInteractingHash))
         {
             PlayTargetAnimation(fallingHash, true);
-            Debug.Log("Asd");
         }
         if (locomotion.justLand)
         {

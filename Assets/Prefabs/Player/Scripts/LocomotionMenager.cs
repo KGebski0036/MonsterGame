@@ -88,7 +88,7 @@ public class LocomotionMenager : MonoBehaviour
         rayCastOrigin.y += groundRaycastOffset;
 
         isOnGround = Physics.SphereCast(rayCastOrigin, groundraycastLength, Vector3.down, out hit, groundLayer);
-
+        
         if (!isOnGround)
         {
             timeInAir += Time.deltaTime;
