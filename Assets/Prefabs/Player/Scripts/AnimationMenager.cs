@@ -15,6 +15,9 @@ public class AnimationMenager : MonoBehaviour
     private int                 isInteractingHash;
     private int                 fallingHash;
     private int                 landingHash;
+    private int                 isJumpingHash;
+    private int                 jumpingHash;
+    private int                 isGrounded;
 
     private void Awake()
     {
@@ -26,11 +29,15 @@ public class AnimationMenager : MonoBehaviour
         isInteractingHash = Animator.StringToHash("isInteracting");
         fallingHash = Animator.StringToHash("Falling");
         landingHash = Animator.StringToHash("Landing");
+        isJumpingHash = Animator.StringToHash("isJumping");
+        jumpingHash = Animator.StringToHash("Jumping");
+        isGrounded = Animator.StringToHash("isGrounded");
     }
     public void UpdateAnimatorValue()
     {
         UpdateMovmentAnimatorValue();
         UpdateFallingAndLandingAnimatorValue();
+        UpadateJumpingAnimatorValues();
     }
 
     public void PlayTargetAnimation(int animationHash, bool isInteractive)
@@ -54,7 +61,18 @@ public class AnimationMenager : MonoBehaviour
         }
         if (locomotion.justLand)
         {
-            PlayTargetAnimation(landingHash, true);
+            PlayTargetAnimation(landingHash, false);
         }
+    }
+
+    private void UpadateJumpingAnimatorValues()
+    {
+        if(locomotion.justStartJump)
+        {
+            locomotion.justStartJump = false;
+            animator.SetBool(isJumpingHash, true);
+            PlayTargetAnimation(jumpingHash, false);
+        }
+        animator.SetBool(isGrounded, locomotion.isOnGround);
     }
 }
