@@ -6,6 +6,8 @@ using UnityEngine;
 public class AnimationMenager : MonoBehaviour
 {
     [SerializeField] float smoothOfAnimationTransition;
+    [SerializeField] float maxSoftLanding;
+    [SerializeField] float maxNormalLanding;
 
     private Animator            animator;
     private LocomotionMenager   locomotion;
@@ -14,7 +16,9 @@ public class AnimationMenager : MonoBehaviour
     private int                 verticalHash;
     private int                 isInteractingHash;
     private int                 fallingHash;
-    private int                 landingHash;
+    private int                 normalLandingHash;
+    private int                 softLandingHash;
+    private int                 hardLandingHash;
     private int                 isJumpingHash;
     private int                 jumpingHash;
     private int                 isGrounded;
@@ -28,7 +32,9 @@ public class AnimationMenager : MonoBehaviour
         verticalHash = Animator.StringToHash("VerticalSpeed");
         isInteractingHash = Animator.StringToHash("isInteracting");
         fallingHash = Animator.StringToHash("Falling");
-        landingHash = Animator.StringToHash("Landing");
+        normalLandingHash = Animator.StringToHash("NormalLanding");
+        softLandingHash = Animator.StringToHash("SoftLanding");
+        hardLandingHash = Animator.StringToHash("HardLanding");
         isJumpingHash = Animator.StringToHash("isJumping");
         jumpingHash = Animator.StringToHash("Jumping");
         isGrounded = Animator.StringToHash("isGrounded");
@@ -46,6 +52,24 @@ public class AnimationMenager : MonoBehaviour
         animator.CrossFade(animationHash, smoothOfAnimationTransition);
     }
 
+    public void PlayLandAnimation(float strengthOfLand)
+    {
+
+        if (IsSoftLanding(strengthOfLand))
+        {
+            PlayTargetAnimation(softLandingHash, false);
+        }
+        else if (IsNormalLanding(strengthOfLand))
+        {
+            PlayTargetAnimation(normalLandingHash, true);
+        }
+        else
+        {
+            PlayTargetAnimation(hardLandingHash, true);
+        }
+
+    }
+
     private void UpdateMovmentAnimatorValue()
     {
         float speed = (locomotion.currentPlayerSpeed / locomotion.playerSprintSpeed) * 1.5f;
@@ -59,12 +83,20 @@ public class AnimationMenager : MonoBehaviour
         {
             PlayTargetAnimation(fallingHash, true);
         }
-        if (locomotion.justLand)
-        {
-            PlayTargetAnimation(landingHash, false);
-        }
     }
 
+    private bool IsSoftLanding(float strengthOfLand)
+    {
+        return strengthOfLand < maxSoftLanding;
+    }
+    private bool IsNormalLanding(float strengthOfLand)
+    {
+        return strengthOfLand < maxNormalLanding;
+    }
+    public bool IsInteracting()
+    {
+        return animator.GetBool(isInteractingHash);
+    }
     private void UpadateJumpingAnimatorValues()
     {
         if(locomotion.justStartJump)

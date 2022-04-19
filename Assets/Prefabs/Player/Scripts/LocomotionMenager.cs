@@ -29,14 +29,16 @@ public class LocomotionMenager : MonoBehaviour
     [Header("Objects")]
     [SerializeField] GameObject playerCamera;
 
-    [Header("Debbuging")]
+    [HideInInspector]
     public float    currentPlayerSpeed = 0;
     public bool     isOnGround;
     public bool     justLand;
     public bool     justStartJump;
     public bool     isJumping;
+    public float    timeInAir = 0;
 
     private InputMenager        inputMenager;
+    private AnimationMenager    animationMenager;
     private Rigidbody           playerRigidbody;
     private Vector3             moveDirection = Vector3.zero;
     private Vector3             moveVelocity;
@@ -44,7 +46,6 @@ public class LocomotionMenager : MonoBehaviour
     private float               turnSmoothVelocity;
     private float               targetAngle;
     private float               targetSpeed;
-    private float               timeInAir = 0;
     private float               jumpMultipler = 0;  
     private float               currentFallingSpeed = 0;  
     private bool                isMoving;
@@ -53,6 +54,7 @@ public class LocomotionMenager : MonoBehaviour
     {
         inputMenager = GetComponent<InputMenager>();
         playerRigidbody = GetComponent<Rigidbody>();
+        animationMenager = GetComponent<AnimationMenager>();
     }
 
     public void HandleAllLocomotion()
@@ -90,8 +92,6 @@ public class LocomotionMenager : MonoBehaviour
 
     private void HandleMovment()
     {
-        targetSpeed = 0;
-
         moveDirection.x = inputMenager.movmentInput.x;
         moveDirection.z = inputMenager.movmentInput.y;
         moveDirection.Normalize();
@@ -101,11 +101,12 @@ public class LocomotionMenager : MonoBehaviour
         moveVelocity = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
 
         playerRigidbody.velocity = moveVelocity * currentPlayerSpeed;
-
     }
 
     private void CalculateCurrentSpeed()
     {
+        targetSpeed = 0;
+
         if (isMoving)
         {
             targetSpeed = playerWalkSpeed;
@@ -118,8 +119,7 @@ public class LocomotionMenager : MonoBehaviour
 
         if (isOnGround)
             currentPlayerSpeed = Mathf.Lerp(currentPlayerSpeed, targetSpeed, walkingSmoothnes);
-        else
-            currentPlayerSpeed = Mathf.Lerp(currentPlayerSpeed, 0, 0.02f);
+
     }
 
     private void HandleFallingAndLanding()
@@ -128,7 +128,8 @@ public class LocomotionMenager : MonoBehaviour
 
         if (verticalVelocity.y > 0)
         {
-            Jumping(); 
+            Jumping();
+            currentFallingSpeed = fallingSpeed / 2;
         }
         else
         {
@@ -156,27 +157,27 @@ public class LocomotionMenager : MonoBehaviour
         }
         else
         {
-            playerRigidbody.AddForce(verticalVelocity);
             verticalVelocity += Vector3.down * fallingSpeed / 2;
-            currentFallingSpeed = fallingSpeed / 2;
+            playerRigidbody.AddForce(verticalVelocity);
         }
     }
 
     private void HandleStatusOfFalling()
     {
-        if (!isOnGround)
+        if (!isOnGround && !isJumping)
         {
             timeInAir += Time.deltaTime;
         }
         else if (timeInAir > 0)
         {
+            Land(timeInAir);
             timeInAir = 0;
-            justLand = true;
         }
-        else
-        {
-            justLand = false;
-        }
+    }
+
+    private void Land(float timeInAir)
+    {
+        animationMenager.PlayLandAnimation(timeInAir);
     }
 
     public void HandleJumping()

@@ -8,11 +8,13 @@ public class InputMenager : MonoBehaviour
     public bool     isSprinting;
     public bool     jumpingInput;
 
-    private LocomotionMenager locomotion;
+    private LocomotionMenager   locomotion;
+    private AnimationMenager    animationMenager;
 
     private void Awake()
     {
         locomotion = GetComponent<LocomotionMenager>();
+        animationMenager = GetComponent<AnimationMenager>();
     }
     public void HandleAllInputs()
     {
@@ -21,9 +23,11 @@ public class InputMenager : MonoBehaviour
     }
     private void HandleMovmentInput()
     {
-        movmentInput.y = Input.GetAxisRaw("Vertical");
-        movmentInput.x = Input.GetAxisRaw("Horizontal");
-
+        if (locomotion.isOnGround) //&& animationMenager.IsInteracting())
+        {
+            movmentInput.y = Input.GetAxisRaw("Vertical");
+            movmentInput.x = Input.GetAxisRaw("Horizontal");
+        }
         isSprinting = Input.GetKey(KeyCode.LeftShift);
     }
 
