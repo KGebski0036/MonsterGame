@@ -28,6 +28,7 @@ public class LocomotionMenager : MonoBehaviour
 
     [Header("Objects")]
     [SerializeField] GameObject playerCamera;
+    [SerializeField] TouchingWall wallDetector;
 
     [HideInInspector]
     public float    currentPlayerSpeed = 0;
@@ -55,6 +56,8 @@ public class LocomotionMenager : MonoBehaviour
         inputMenager = GetComponent<InputMenager>();
         playerRigidbody = GetComponent<Rigidbody>();
         animationMenager = GetComponent<AnimationMenager>();
+
+        wallDetector.detectWall += HandleTouchingWall;
     }
 
     public void HandleAllLocomotion()
@@ -66,6 +69,16 @@ public class LocomotionMenager : MonoBehaviour
         HandleMovment();
 
         HandleFallingAndLanding();
+    }
+
+    public void HandleJumping()
+    {
+        if (isOnGround)
+        {
+            inputMenager.jumpingInput = false;
+            verticalVelocity = Vector3.up * jumpForce;
+            jumpMultipler = 0;
+        }
     }
 
     private void HandleLocomotionStatus()
@@ -180,14 +193,8 @@ public class LocomotionMenager : MonoBehaviour
         animationMenager.PlayLandAnimation(timeInAir);
     }
 
-    public void HandleJumping()
+    private void HandleTouchingWall(object sender, EventArgs args)
     {
-        if (isOnGround)
-        {
-            inputMenager.jumpingInput = false;
-            verticalVelocity = Vector3.up * jumpForce;
-            jumpMultipler = 0;
-        }
+        Debug.Log("detect");
     }
-
 }
